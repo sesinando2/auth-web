@@ -16,27 +16,15 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import './index.css';
 
 // import App from './App';
-import Root from './router/components/Root'
+// import Root from './router/components/Root'
+import Root from './advanced/container/Root'
 
 import registerServiceWorker from './registerServiceWorker';
 
-const store = createStore(rootReducer);
-
-/* Advanced Example
-const loggerMiddleware = createLogger();
-
-const store = createStore(
-    rootReducer,
-    applyMiddleware(
-        thunkMiddleware,
-        loggerMiddleware
-    ));
-
-store.dispatch(selectSubreddit('reactjs'));
-store.dispatch(fetchPostsIfNeeded('reactjs')).then(() => console.log(store.getState()));*/
+// const store = createStore(rootReducer);
 
 render(
-    <Root store={store}/>,
+    <Root/>,
     document.getElementById('root')
 );
 
