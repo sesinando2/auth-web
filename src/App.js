@@ -1,7 +1,7 @@
 import React, {Component} from 'react';
 import styled from 'styled-components';
 
-import logo from './images/bootstrap-solid.svg';
+import logo from './container/App/bootstrap-solid.svg';
 import './App.css';
 
 const Wrapper = styled.div`
