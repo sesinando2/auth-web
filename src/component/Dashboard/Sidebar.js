@@ -26,8 +26,8 @@ const Sidebar = (props) => (
     <nav className="col-md-2 d-none d-md-block bg-light sidebar">
         <div className="sidebar-sticky">
             <ul className="nav flex-column">
-                <Nav {...props} text="Clients" path="/client" />
-                <Nav {...props} text="Users" path="/user" />
+                <Nav {...props} text="Clients" path="/dashboard/client" />
+                <Nav {...props} text="Users" path="/dashboard/user" />
             </ul>
         </div>
     </nav>

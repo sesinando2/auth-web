@@ -2,7 +2,8 @@ import React from 'react'
 import {Provider} from 'react-redux'
 import {
     BrowserRouter as Router,
-    Route
+    Route,
+    Redirect
 } from 'react-router-dom'
 
 import configureStore from '../configureStore'
@@ -13,18 +14,22 @@ import PrivateRoute from './PrivateRoute'
 import Dashboard from '../component/Dashboard/Dashboard'
 
 import Auth from './Auth'
+import {getClientList} from "../actions/client";
 
 const store = configureStore();
 store.dispatch(retrieveToken());
+store.dispatch(getClientList());
 
 export default () => (
     <Provider store={store}>
         <Router>
             <span>
-                <PrivateRoute path="" component={Dashboard}/>
+                <PrivateRoute path="" exact render={() => (<Redirect to="/dashboard" />)} />
 
-                <Route path="/sign-in" component={Auth}/>
-                <Route path="/sign-out" component={Auth}/>
+                <PrivateRoute path="/dashboard" component={Dashboard}/>
+
+                <Route path="/sign-in" exact component={Auth}/>
+                <Route path="/sign-out" exact component={Auth}/>
             </span>
         </Router>
     </Provider>

@@ -39,8 +39,8 @@ export default class Dashboard extends Component {
                     <div className="row">
                         <Sidebar {...this.props} />
 
-                        <PrivateRoute path="/client" component={Client} />
-                        <PrivateRoute path="/User" component={User} />
+                        <PrivateRoute path="/dashboard/client" component={Client} />
+                        <PrivateRoute path="/dashboard/user" component={User} />
                     </div>
                 </div>
             </span>

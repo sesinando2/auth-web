@@ -32,7 +32,7 @@ class Auth extends Component {
         let {location, authentication} = this.props;
 
         if (authentication.isAuthenticated) {
-            let redirectTo = location.from || '';
+            let redirectTo = location.from || '/dashboard';
             return <Redirect to={redirectTo} exact strict />
         }
 
