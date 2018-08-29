@@ -8,7 +8,7 @@ const mapStateToProps = (state) => ({authentication: state.authentication});
 const PrivateRoute = ({component: Component, authentication, ...rest}) => (
     <Route
         {...rest}
-        render={props =>
+        render={(props) =>
             authentication.isAuthenticated ? (
                 <Component {...props} />
             ) : (

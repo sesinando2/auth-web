@@ -16,10 +16,14 @@ const CLIENT_URL = 'http://localhost:10082/api/client';
 
 export function getClientList() {
     return (dispatch, getState) => {
-        let {authentication} = getState();
+        let {authentication, client} = getState();
+
+        if (!shouldGetClientList(client)) {
+            return Promise.resolve();
+        }
 
         if (!authentication.isAuthenticated || !authentication.token) {
-            return;
+            return Promise.reject('Should be authenticated');
         }
 
         dispatch(requestClientList());
@@ -31,6 +35,16 @@ export function getClientList() {
         })
         .then(response => response.json(), error => console.log('An error occurred', error))
         .then(json => dispatch(receiveClientList(json)));
+    }
+}
+
+function shouldGetClientList(client) {
+    if (client.entities.length === 0) {
+        return true;
+    } else if (client.isRequesting) {
+        return false;
+    } else {
+        return client.didInvalidate;
     }
 }
 

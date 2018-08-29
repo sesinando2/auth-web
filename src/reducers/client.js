@@ -2,7 +2,8 @@ import {RECEIVE_CLIENT_LIST, REQUEST_CLIENT_LIST} from '../actions/client'
 
 export default function client(state = {
     isRequesting: false,
-    entities: {}
+    didInvalidate: false,
+    entities: []
 }, action) {
     switch (action.type) {
         case REQUEST_CLIENT_LIST:
@@ -11,14 +12,12 @@ export default function client(state = {
             });
 
         case RECEIVE_CLIENT_LIST:
-            let entities = action.json.reduce((accumulator, client) => {
-                accumulator[client.clientId] = client;
-                return accumulator;
-            }, {});
+            let entities = action.json;
 
             return Object.assign({}, state, {
-               isRequesting: false,
-               entities
+                isRequesting: false,
+                lastUpdated: action.receivedAt,
+                entities
             });
 
         default:
