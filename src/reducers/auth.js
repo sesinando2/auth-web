@@ -40,6 +40,7 @@ function authentication(state = {
 }, action) {
 
     switch (action.type) {
+        case REFRESH_TOKEN:
         case REQUEST_TOKEN:
             return Object.assign({}, state, {
                 isAuthenticating: true
@@ -54,7 +55,8 @@ function authentication(state = {
                     isAuthenticating: false,
                     isAuthenticated: true,
                     lastUpdated: action.receivedAt,
-                    token: json['access_token'],
+                    token: json[ACCESS_TOKEN],
+                    refreshToken: json[REFRESH_TOKEN],
                     data: json
                 });
             }

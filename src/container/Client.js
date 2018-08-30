@@ -1,24 +1,15 @@
-import React, {Component} from 'react'
+import React from 'react'
 import {connect} from 'react-redux'
 import {withRouter} from 'react-router-dom'
 
-import List from '../component/Dashboard/Client/List'
+import ClientForm from '../component/Dashboard/Client/Form'
 
-import {getClientList} from "../actions/client";
+const Client = (props) => {
+    const {clients, match} = props;
+    const client = clients.find((client) => client.clientId === match.params.clientId);
+    return <ClientForm client={Object.assign({}, client)} />
+};
 
-class Client extends Component {
-
-    componentDidMount() {
-        let {dispatch} = this.props;
-        dispatch(getClientList())
-    }
-
-    render() {
-        let {client} = this.props;
-        return <List clients={client.entities}/>
-    }
-}
-
-const mapStateToProps = (state) => ({client: state.client});
+const mapStateToProps = (state) => ({clients: state.client.entities});
 
 export default withRouter(connect(mapStateToProps)(Client));

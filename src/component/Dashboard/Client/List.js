@@ -2,8 +2,11 @@ import React, {Component} from 'react'
 import PropTypes from 'prop-types'
 import {NavLink} from 'react-router-dom'
 
+import PrivateRoute from '../../../container/PrivateRoute'
 import Page from '../Page'
 import List from '../List'
+
+import Client from '../../../container/Client'
 
 class ClientList extends Component {
   render() {
@@ -20,6 +23,10 @@ class ClientList extends Component {
             <div className="row">
               <div className="col-3">
                 <List title="Client List" items={clientList}/>
+              </div>
+
+              <div className="col-9">
+                <PrivateRoute path="/dashboard/client/:clientId" component={Client} />
               </div>
             </div>
           </Page>

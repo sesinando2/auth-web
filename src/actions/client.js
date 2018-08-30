@@ -1,4 +1,5 @@
 import fetch from 'cross-fetch'
+import {handle401} from "./auth";
 
 export const REQUEST_CLIENT_LIST = 'REQUEST_CLIENT_LIST';
 export const RECEIVE_CLIENT_LIST = 'RECEIVE_CLIENT_LIST';
@@ -33,7 +34,12 @@ export function getClientList() {
                 'Authorization': `Bearer ${authentication.token}`
             }
         })
-        .then(response => response.json(), error => console.log('An error occurred', error))
+        .then(response => {
+            if (response.status === 401) {
+                return dispatch(handle401());
+            }
+            return response.json();
+        }, error => console.log('An error occurred', error))
         .then(json => dispatch(receiveClientList(json)));
     }
 }

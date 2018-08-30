@@ -7,7 +7,7 @@ import Header from './Header'
 import Sidebar from './Sidebar'
 
 import Page from './Page'
-import Client from '../../container/Client'
+import ClientList from '../../container/ClientList'
 
 const User = () => {
     return <Page title="User"/>;
@@ -24,7 +24,7 @@ export default class Dashboard extends Component {
                     <div className="row">
                         <Sidebar {...this.props} />
 
-                        <PrivateRoute path="/dashboard/client" component={Client} />
+                        <PrivateRoute path="/dashboard/client" component={ClientList} />
                         <PrivateRoute path="/dashboard/user" component={User} />
                     </div>
                 </div>

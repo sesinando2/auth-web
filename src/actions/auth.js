@@ -15,10 +15,33 @@ export function getToken(authorizationCode) {
                 'Authorization': `Basic ${btoa(`admin:Urub42q9bCyFBP7B`)}`,
                 'Content-Type': 'application/x-www-form-urlencoded'
             },
-            body: buildRequestBody(authorizationCode)
+            body: buildAuthCodeRequestBody(authorizationCode)
         })
         .then(response => response.json(), error => console.log('An error occurred', error))
         .then(json => dispatch(receiveToken(json)))
+    }
+}
+
+export function handle401() {
+    return (dispatch, getState) => {
+        const {authentication} = getState();
+        if (!authentication.isAuthenticated) {
+            return Promise.resolve(dispatch(clearAuthentication()));
+        } else if (authentication.refreshToken) {
+            const token = authentication.refreshToken;
+            dispatch(clearAuthentication());
+            dispatch(refreshToken());
+            return fetch(`http://localhost:10082/oauth/token`, {
+                method: 'POST',
+                headers: {
+                    'Authorization': `Basic ${btoa(`admin:Urub42q9bCyFBP7B`)}`,
+                    'Content-Type': 'application/x-www-form-urlencoded'
+                },
+                body: buildRefreshTokenRequestBody(token)
+            })
+            .then(response => response.json(), error => console.log('An error occurred', error))
+            .then(json => dispatch(receiveToken(json)))
+        }
     }
 }
 
@@ -49,11 +72,24 @@ function receiveToken(json) {
     }
 }
 
-function buildRequestBody(authorizationCode) {
+function refreshToken() {
+    return {
+        type: REFRESH_TOKEN
+    }
+}
+
+function buildAuthCodeRequestBody(authorizationCode) {
     let body = new URLSearchParams();
     body.set('grant_type', 'authorization_code');
     body.set('code', authorizationCode);
     body.set('client_id', 'admin');
     body.set('redirect_uri', 'http://localhost:3000');
-    return body.toString()
+    return body.toString();
+}
+
+function buildRefreshTokenRequestBody(refreshToken) {
+    let body = new URLSearchParams();
+    body.set('grant_type', 'refresh_token');
+    body.set('refresh_token', refreshToken);
+    return body.toString();
 }

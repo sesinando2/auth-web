@@ -10,7 +10,7 @@ class List extends Component {
             <div className="card">
                 <div className="card-header">{title}</div>
 
-                <div className="list-group">{items}</div>
+                <div className="list-group list-group-flush">{items}</div>
             </div>
         )
     }
