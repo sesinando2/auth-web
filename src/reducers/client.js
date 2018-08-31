@@ -12,7 +12,10 @@ export default function client(state = {
             });
 
         case RECEIVE_CLIENT_LIST:
-            let entities = action.json;
+            let entities = action.json.reduce((accumulator, client) => {
+                accumulator[client.id] = client;
+                return accumulator;
+            }, {});
 
             return Object.assign({}, state, {
                 isRequesting: false,

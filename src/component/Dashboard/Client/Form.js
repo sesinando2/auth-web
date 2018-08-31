@@ -8,13 +8,13 @@ export default class ClientForm extends Component {
 
     validateClientId(value) {
         if (!value) {
-            return {error: 'Please enter a valid Client ID'}
+            return Promise.resolve({error: 'Please enter a valid Client ID'});
         }
     }
 
     validateClientSecret(value) {
         if (!value) {
-            return {error: 'Please enter a valid Client Secret'}
+            return {error: 'Please enter a valid Client Secret'};
         }
     }
 
@@ -32,13 +32,13 @@ export default class ClientForm extends Component {
                         <TextField name="clientId" label="Client ID"
                                    helpText="Please specify a unique identifier for your client"
                                    placeholder="A unique identifier for the client"
-                                   validate={validateClientId}
-                                   errors={formApi.errors} />
+                                   formApi={formApi}
+                                   asyncValidate={validateClientId} />
                         <TextField name="secret" label="Client Secret"
                                    helpText="Please specify the secret key for the client"
                                    placeholder="A secret key used with the Client ID for authentication"
-                                   validate={validateClientSecret}
-                                   errors={formApi.errors} />
+                                   formApi={formApi}
+                                   validate={validateClientSecret} />
                         <button className="btn btn-primary" type="submit">Save</button>
                     </form>
                 )}

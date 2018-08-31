@@ -27,13 +27,15 @@ Field.propTypes = {
 
 export class TextField extends Component {
     render() {
-        const {name, label, placeholder, helpText, validate, errors} = this.props;
-        const error = errors && errors[name];
-        const className = error ? 'form-control is-invalid' : 'form-control';
+        const {name, label, placeholder, helpText, validate, asyncValidate, formApi} = this.props;
+        const error = formApi.errors && formApi.errors[name];
+        const asyncError = formApi.asyncErrors && formApi.asyncErrors[name];
+        const anyErrors = error || asyncError;
+        const className = anyErrors ? 'form-control is-invalid' : 'form-control';
 
         return (
-            <Field name={name} label={label} helpText={helpText} error={error}>
-                <Text field={name} id={name} className={className} validate={validate} placeholder={placeholder} />
+            <Field name={name} label={label} helpText={helpText} error={anyErrors}>
+                <Text field={name} id={name} className={className} validate={validate} asyncValidate={asyncValidate} placeholder={placeholder} />
             </Field>
         )
     }
@@ -42,8 +44,9 @@ export class TextField extends Component {
 TextField.propTypes = {
     name: PropTypes.string.isRequired,
     label: PropTypes.string.isRequired,
+    formApi: PropTypes.object.isRequired,
     placeholder: PropTypes.string,
     helpText: PropTypes.string,
-    errors: PropTypes.object,
-    validate: PropTypes.func
+    validate: PropTypes.func,
+    asyncValidate: PropTypes.func
 };

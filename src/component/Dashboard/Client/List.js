@@ -11,9 +11,9 @@ import Client from '../../../container/Client'
 class ClientList extends Component {
   render() {
       const {clients} = this.props;
-      const clientList = clients.map(({clientId}) => (
-          <NavLink to={`/dashboard/client/${clientId}`}
-                   key={clientId}
+      const clientList = clients.map(({id, clientId}) => (
+          <NavLink to={`/dashboard/client/${id}`}
+                   key={id}
                    className="list-group-item list-group-item-action"
           >{clientId}</NavLink>
       ));
@@ -26,7 +26,7 @@ class ClientList extends Component {
               </div>
 
               <div className="col-9">
-                <PrivateRoute path="/dashboard/client/:clientId" component={Client} />
+                <PrivateRoute path="/dashboard/client/:id" component={Client} />
               </div>
             </div>
           </Page>

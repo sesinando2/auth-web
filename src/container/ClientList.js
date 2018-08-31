@@ -15,7 +15,9 @@ class ClientList extends Component {
 
     render() {
         let {client} = this.props;
-        return <List clients={client.entities}/>
+        let entities = client.entities;
+        let clients = Object.keys(entities).map((key => entities[key]));
+        return <List clients={clients}/>
     }
 }
 
