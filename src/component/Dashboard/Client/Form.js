@@ -4,7 +4,13 @@ import {Form} from 'react-form'
 
 import {TextField} from "../Field"
 
-export default class ClientForm extends Component {
+export default class ClientForm extends React.Component {
+
+    constructor(props) {
+        super(props);
+        this.setApi = this.setApi.bind(this);
+        this.onChange = this.onChange.bind(this);
+    }
 
     componentDidUpdate(prev) {
         const {form} = this.props;
@@ -39,11 +45,9 @@ export default class ClientForm extends Component {
     render() {
         const validateClientId = (value) => this.validateRequired('Please enter a valid Client ID.', value);
         const validateClientSecret = (value) => this.validateRequired('Please enter a valid Client Secret.', value);
-        const setApi = this.setApi.bind(this);
-        const onChange = this.onChange.bind(this);
 
         return (
-            <Form getApi={setApi} onChange={onChange}>
+            <Form getApi={this.setApi} onChange={this.onChange}>
                 {formApi => (
                     <form onSubmit={formApi.submitForm}>
                         <TextField name="clientId" label="Client ID"
