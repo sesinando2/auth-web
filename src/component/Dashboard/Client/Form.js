@@ -1,8 +1,8 @@
-import React, {Component} from 'react'
+import React from 'react'
 import PropTypes from 'prop-types'
 import {Form} from 'react-form'
 
-import {TextField} from "../Field"
+import {TextField, SelectField} from "../Field"
 
 export default class ClientForm extends React.Component {
 
@@ -14,15 +14,18 @@ export default class ClientForm extends React.Component {
 
     componentDidUpdate(prev) {
         const {form} = this.props;
-
-        if (prev.form.current !== form.current) {
+        const isDifferentClient = prev.form.current !== form.current;
+        if (isDifferentClient) {
             this.formApi.resetAll();
         }
 
         this.formApi.setAllValues(form.values);
+        this.setFormErrors(form.errors);
+    }
 
-        for (let field in form.errors) {
-            this.formApi.setError(field, form.errors[field]);
+    setFormErrors(errors) {
+        for (let field in errors) {
+            this.formApi.setError(field, errors[field]);
         }
     }
 
@@ -35,7 +38,7 @@ export default class ClientForm extends React.Component {
     }
 
     validateRequired(errorMessage, value) {
-        if (value === null || value === undefined || value === '') {
+        if (value === null || value === undefined || value === '' || value.length === 0) {
             return {error: errorMessage}
         }
 
@@ -59,6 +62,12 @@ export default class ClientForm extends React.Component {
                                    helpText="Please specify the secret key for the client"
                                    placeholder="A secret key used with the Client ID for authentication"
                                    formApi={formApi} validate={validateClientSecret} />
+
+                        <SelectField name="resourceIds" label="Resources"
+                                     options={[
+                                         {label: 'Authentication', value: 'AUTH'},
+                                         {label: 'Finance', value: 'FINANCE'}
+                                     ]} multiple={true} />
                         <button className="btn btn-primary" type="submit">Save</button>
                     </form>
                 )}
