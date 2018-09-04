@@ -68,6 +68,28 @@ export default class ClientForm extends React.Component {
                                          {label: 'Authentication', value: 'AUTH'},
                                          {label: 'Finance', value: 'FINANCE'}
                                      ]} multiple={true} />
+
+                        <SelectField name="authorizedGrantTypes" label="Authorised Grant Types"
+                                     options={[
+                                         {label: 'Implicit', value: 'IMPLICIT'},
+                                         {label: 'Authorization Code', value: 'AUTHORIZATION_CODE'},
+                                         {label: 'Client Credentials', value: 'CLIENT_CREDENTIALS'},
+                                         {label: 'Password', value: 'PASSWORD'},
+                                         {label: 'Refresh Token', value: 'REFRESH_TOKEN'}
+                                     ]} multiple={true} />
+
+                        <SelectField name="scope" label="Scope"
+                                     options={[
+                                         {label: 'Read', value: 'READ'},
+                                         {label: 'Write', value: 'WRITE'},
+                                         {label: 'Trust', value: 'TRUST'}
+                                     ]} multiple={true} />
+
+                        <SelectField name="roles" label="Roles"
+                                     options={[
+                                         {label: 'Administrator', value: 'Admin'},
+                                         {label: 'User', value: 'USER'}
+                                     ]} multiple={true} />
                         <button className="btn btn-primary" type="submit">Save</button>
                     </form>
                 )}
