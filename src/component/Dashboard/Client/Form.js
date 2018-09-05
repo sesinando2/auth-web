@@ -2,7 +2,8 @@ import React from 'react'
 import PropTypes from 'prop-types'
 import {Form} from 'react-form'
 
-import {TextField, SelectField} from "../Field"
+import TextField from "../../Field/TextField"
+import SelectField from "../../Field/SelectField"
 
 export default class ClientForm extends React.Component {
 
@@ -64,12 +65,14 @@ export default class ClientForm extends React.Component {
                                    formApi={formApi} validate={validateClientSecret} />
 
                         <SelectField name="resourceIds" label="Resources"
+                                     helpText="Please select all resources to allow access to"
                                      options={[
                                          {label: 'Authentication', value: 'AUTH'},
                                          {label: 'Finance', value: 'FINANCE'}
                                      ]} multiple={true} />
 
                         <SelectField name="authorizedGrantTypes" label="Authorised Grant Types"
+                                     helpText="Please select all authorised grant types to allow"
                                      options={[
                                          {label: 'Implicit', value: 'IMPLICIT'},
                                          {label: 'Authorization Code', value: 'AUTHORIZATION_CODE'},
@@ -79,6 +82,7 @@ export default class ClientForm extends React.Component {
                                      ]} multiple={true} />
 
                         <SelectField name="scope" label="Scope"
+                                     helpText="Please select all scopes that apply"
                                      options={[
                                          {label: 'Read', value: 'READ'},
                                          {label: 'Write', value: 'WRITE'},
@@ -86,6 +90,7 @@ export default class ClientForm extends React.Component {
                                      ]} multiple={true} />
 
                         <SelectField name="roles" label="Roles"
+                                     helpText="Please select all roles that apply"
                                      options={[
                                          {label: 'Administrator', value: 'Admin'},
                                          {label: 'User', value: 'USER'}
