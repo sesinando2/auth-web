@@ -2,8 +2,9 @@ import React from 'react'
 import PropTypes from 'prop-types'
 import {Form} from 'react-form'
 
-import TextField from "../../Field/TextField"
-import SelectField from "../../Field/SelectField"
+import TextField from '../../Field/TextField'
+import SelectField from '../../Field/SelectField'
+import MultiValuedTextField from '../../Field/MultiValuedTextField'
 
 export default class ClientForm extends React.Component {
 
@@ -95,6 +96,10 @@ export default class ClientForm extends React.Component {
                                          {label: 'Administrator', value: 'Admin'},
                                          {label: 'User', value: 'USER'}
                                      ]} multiple={true} />
+
+                        <MultiValuedTextField name="registeredRedirectUris" label="Registered Redirect URLs"
+                                              helpText="Please specify allowed redirect URLs"/>
+
                         <button className="btn btn-primary" type="submit">Save</button>
                     </form>
                 )}
