@@ -34,7 +34,7 @@ class ValueElement extends React.Component {
 
     render() {
         return (
-            <button type="button" className='list-group-item list-group-item-action' ref={this.buttonElement}
+            <button type="button" className='list-group-item list-group-item-action list-group-item-info' ref={this.buttonElement}
                     onClick={this.delete} onKeyUp={this.handleKeyUp} onBlur={this.props.onBlur}>
                 <div className="d-flex align-items-center justify-content-between">
                     <div className="text align-middle">{this.props.value}</div>
