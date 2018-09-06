@@ -1,5 +1,4 @@
 import React from 'react'
-import {Form, Text} from 'react-form'
 import PropTypes from 'prop-types'
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome'
 import {faPlus, faTimes} from '@fortawesome/free-solid-svg-icons'
@@ -10,7 +9,16 @@ class ValueElement extends React.Component {
 
     constructor(props) {
         super(props);
+        this.buttonElement = React.createRef();
         this.delete = this.delete.bind(this);
+        this.handleKeyUp = this.handleKeyUp.bind(this);
+    }
+
+    componentDidUpdate() {
+        const {focused} = this.props;
+        if (focused) {
+            this.buttonElement.current.focus();
+        }
     }
 
     delete() {
@@ -18,94 +26,148 @@ class ValueElement extends React.Component {
         onDelete(value);
     }
 
+    handleKeyUp(e) {
+        if (e.keyCode === 8) {
+            this.delete();
+        }
+    }
+
     render() {
         return (
-            <a className="list-group-item list-group-item-action flex-column" onClick={this.delete}>
+            <button type="button" className='list-group-item list-group-item-action' ref={this.buttonElement}
+                    onClick={this.delete} onKeyUp={this.handleKeyUp} onBlur={this.props.onBlur}>
                 <div className="d-flex align-items-center justify-content-between">
                     <div className="text align-middle">{this.props.value}</div>
 
                     <FontAwesomeIcon className="text-muted" icon={faTimes} />
                 </div>
-            </a>
+            </button>
         )
     }
 }
 
 ValueElement.propTypes = {
     onDelete: PropTypes.func.isRequired,
-    value: PropTypes.any
+    focused: PropTypes.bool,
+    value: PropTypes.any,
+    onBlur: PropTypes.func
 };
 
 class AddInputElement extends React.Component {
 
     constructor(props) {
         super(props);
-        this.validate = this.validate.bind(this);
-        this.addValue = this.addValue.bind(this);
+
+        this.state = {
+            value: ''
+        };
+
+        this.textInput = React.createRef();
     }
 
-    validate(value) {
-        if (!value) {
-            return {error: 'required'}
+    componentDidUpdate() {
+        const {focused} = this.props;
+
+        if (focused) {
+            this.textInput.current.focus();
         }
     }
 
-    addValue(formApi) {
-        const {name, addValue} = this.props;
-        const value = formApi.values[name];
-        formApi.resetAll();
-        addValue(value);
+    addValue() {
+        const {addValue} = this.props;
+        const {value} = this.state;
+
+        if (value.trim()) {
+            addValue(this.state.value);
+        }
+        this.setState({value: ''});
+    }
+
+    handleKeyPress(e) {
+        if (e.keyCode === 13) {
+            e.preventDefault();
+            this.addValue();
+        }
     }
 
     render() {
         return (
-            <Form>
-                { formApi =>
-                    <div className="input-group">
-                        <Text className="form-control" field={this.props.name} validate={this.validate} />
-                        <div className="input-group-append">
-                            <button className="btn btn-outline-secondary" type="button"
-                                    disabled={!formApi.values[this.props.name]}
-                                    onClick={() => this.addValue(formApi)}>
-                                <FontAwesomeIcon icon={faPlus} />
-                            </button>
-                        </div>
-                    </div>
-                }
-            </Form>
+            <div className="input-group">
+                <input type="text" className="form-control"
+                       ref={this.textInput}
+                       value={this.state.value}
+                       onBlur={this.props.onBlur}
+                       onChange={(e) => this.setState({value: e.target.value})}
+                       onKeyDown={(e) => this.handleKeyPress(e)}/>
+
+                <div className="input-group-append">
+                    <button className="btn btn-outline-secondary" type="button"
+                            disabled={!this.state.value.trim()}
+                            onClick={() => this.addValue()}>
+                        <FontAwesomeIcon icon={faPlus} />
+                    </button>
+                </div>
+            </div>
         )
     }
 }
 
 AddInputElement.propTypes = {
     name: PropTypes.string.isRequired,
-    addValue: PropTypes.func.isRequired
+    addValue: PropTypes.func.isRequired,
+    focused: PropTypes.bool,
+    onBlur: PropTypes.func
 };
 
 export default class MultiValuedTextField extends BaseCustomField {
 
+    constructor(props) {
+        super(props);
+        this.state = {
+            focusOnAdd: false,
+            focusOnFirst: false
+        };
+        this.addInputElement = React.createRef();
+    }
+
     delete(fieldApi, valueToRemove) {
         const currentValue = fieldApi.value || [];
-        fieldApi.setValue(currentValue.filter((value) => value !== valueToRemove));
+        const updatedValue = currentValue.filter((value) => value !== valueToRemove);
+        fieldApi.setValue(updatedValue);
+
+        if (updatedValue.length === 0) {
+            this.setState({focusOnAdd: true, focusOnFirst: false});
+        } else {
+            this.setState({focusOnAdd: false, focusOnFirst: true});
+        }
     }
 
     addValue(fieldApi, valueToAdd) {
+        this.setState({focusOnFirst: false});
         const currentValue = fieldApi.value || [];
-        fieldApi.setValue(currentValue.concat(valueToAdd));
+        if (currentValue.indexOf(valueToAdd) < 0) {
+            fieldApi.setValue(currentValue.concat(valueToAdd));
+        }
     }
 
     renderCustomField(fieldApi) {
         const baseProperties = this.getFieldProperties(fieldApi);
         let values =  [].concat(...(fieldApi.value || []));
 
-        let valuesElements = values.map((value) => {
+        const valuesElements = values.map((value, index) => {
+            const shouldFocus = this.state.focusOnFirst && index === 0;
             const key = `${fieldApi.fieldName}-${encodeURI(value)}`;
-            return <ValueElement key={key} value={value} onDelete={(value) => this.delete(fieldApi, value)} />
+            return <ValueElement key={key} value={value} focused={shouldFocus}
+                                 onDelete={(value) => this.delete(fieldApi, value)}
+                                 onBlur={() => this.setState({focusOnFirst: false})} />
         });
 
         return (
             <FieldGroup {...baseProperties}>
-                <AddInputElement name="addValue" addValue={(value) => this.addValue(fieldApi, value)} />
+                <AddInputElement name="addValue" ref={this.addInputElement} focused={this.state.focusOnAdd}
+                                 addValue={(value) => this.addValue(fieldApi, value)}
+                                 onBlur={() => this.setState({focusOnAdd: false})}/>
+
                 <ul className="list-group mt-2">
                     {valuesElements}
                 </ul>
