@@ -4,6 +4,6 @@ body,
   height: 100%;
 }
 
-.custom-control.is-invalid~.invalid-feedback {
+.is-invalid .invalid-feedback {
   display: block;
 }

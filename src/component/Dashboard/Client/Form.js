@@ -40,6 +40,7 @@ export default class ClientForm extends React.Component {
     }
 
     validateRequired(errorMessage, value) {
+        console.log(value);
         if (value === null || value === undefined || value === '' || value.length === 0) {
             return {error: errorMessage}
         }
@@ -93,13 +94,13 @@ export default class ClientForm extends React.Component {
                         <SelectField name="roles" label="Roles"
                                      helpText="Please select all roles that apply"
                                      options={[
-                                         {label: 'Administrator', value: 'Admin'},
+                                         {label: 'Administrator', value: 'ADMIN'},
                                          {label: 'User', value: 'USER'}
                                      ]} multiple={true} />
 
                         <MultiValuedTextField name="registeredRedirectUris" label="Registered Redirect URLs"
                                               placeholder="Enter URL to redirect to"
-                                              helpText="Please specify allowed redirect URLs"/>
+                                              helpText="Please specify allowed redirect URLs" />
 
                         <button className="btn btn-primary" type="submit">Save</button>
                     </form>

@@ -91,9 +91,15 @@ class AddInputElement extends React.Component {
     }
 
     render() {
+        let className = 'form-control';
+
+        if (this.props.invalid) {
+            className += ' is-invalid';
+        }
+
         return (
             <div className="input-group">
-                <input type="text" className="form-control"
+                <input type="text" className={className}
                        placeholder={this.props.placeholder}
                        ref={this.textInput}
                        value={this.state.value}
@@ -116,6 +122,7 @@ class AddInputElement extends React.Component {
 AddInputElement.propTypes = {
     name: PropTypes.string.isRequired,
     addValue: PropTypes.func.isRequired,
+    invalid: PropTypes.bool,
     placeholder: PropTypes.string,
     focused: PropTypes.bool,
     onBlur: PropTypes.func
@@ -166,7 +173,9 @@ export default class MultiValuedTextField extends BaseCustomField {
 
         return (
             <FieldGroup {...baseProperties}>
-                <AddInputElement name="addValue" placeholder={this.props.placeholder}
+                <AddInputElement name="addValue"
+                                 placeholder={this.props.placeholder}
+                                 invalid={Boolean(fieldApi.error)}
                                  ref={this.addInputElement} focused={this.state.focusOnAdd}
                                  addValue={(value) => this.addValue(fieldApi, value)}
                                  onBlur={() => this.setState({focusOnAdd: false})}/>
@@ -178,3 +187,12 @@ export default class MultiValuedTextField extends BaseCustomField {
         )
     }
 }
+
+MultiValuedTextField.propTypes = {
+    name: PropTypes.string.isRequired,
+    label: PropTypes.string.isRequired,
+    placeholder: PropTypes.string,
+    helpText: PropTypes.string,
+    validate: PropTypes.func,
+    asyncValidate: PropTypes.func
+};
