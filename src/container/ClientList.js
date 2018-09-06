@@ -4,7 +4,7 @@ import {withRouter} from 'react-router-dom'
 
 import List from '../component/Dashboard/Client/List'
 
-import {getClientList} from "../actions/client";
+import {getClientList} from "../actions/client/index";
 
 class ClientList extends Component {
 

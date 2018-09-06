@@ -1,7 +1,5 @@
-import {
-    CLEAR_FORM, EDIT_CLIENT, RECEIVE_VALIDATE_CLIENT, REQUEST_VALIDATE_CLIENT,
-    UPDATE_FORM
-} from '../../actions/client';
+import {CLEAR_FORM, EDIT_CLIENT, UPDATE_FORM} from '../../actions/client/index';
+import {RECEIVE_VALIDATE_CLIENT, REQUEST_VALIDATE_CLIENT} from "../../actions/client/form";
 
 export default function handleForm(state, action) {
     switch (action.type) {
@@ -20,6 +18,7 @@ export default function handleForm(state, action) {
                     errors: Object.assign({}, getErrors(action.json))
                 })
             }
+
             return state;
 
         case EDIT_CLIENT:

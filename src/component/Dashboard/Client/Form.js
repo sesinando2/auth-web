@@ -102,7 +102,7 @@ export default class ClientForm extends React.Component {
                                               placeholder="Enter URL to redirect to"
                                               helpText="Please specify allowed redirect URLs" />
 
-                        <button className="btn btn-primary" type="submit">Save</button>
+                        <button className="btn btn-primary fa-pull-right" type="submit">Save</button>
                     </form>
                 )}
             </Form>

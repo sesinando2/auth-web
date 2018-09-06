@@ -1,9 +1,9 @@
 import {
     CLEAR_FORM,
-    RECEIVE_CLIENT_LIST, RECEIVE_VALIDATE_CLIENT, REQUEST_CLIENT_LIST,
-    REQUEST_VALIDATE_CLIENT, EDIT_CLIENT, UPDATE_FORM
-} from '../../actions/client'
+    RECEIVE_CLIENT_LIST, REQUEST_CLIENT_LIST,EDIT_CLIENT, UPDATE_FORM
+} from '../../actions/client/index'
 import handleForm from './form';
+import {RECEIVE_VALIDATE_CLIENT, REQUEST_VALIDATE_CLIENT} from "../../actions/client/form";
 
 export default function client(state = {
     isRequesting: false,
@@ -37,6 +37,7 @@ export default function client(state = {
                 form: handleForm(state.form, action)
             });
 
+        // Form Operations
         case CLEAR_FORM:
         case UPDATE_FORM:
         case REQUEST_VALIDATE_CLIENT:

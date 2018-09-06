@@ -2,7 +2,7 @@ import React, {Component} from 'react'
 import {connect} from 'react-redux'
 import {withRouter} from 'react-router-dom'
 
-import {clearForm, editClient, updateForm} from '../actions/client'
+import {clearForm, editClient, updateForm} from '../actions/client/form';
 
 import ClientForm from '../component/Dashboard/Client/Form'
 

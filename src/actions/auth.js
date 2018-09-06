@@ -22,6 +22,22 @@ export function getToken(authorizationCode) {
     }
 }
 
+export function authenticatedRequest(dispatch, getState, doRequest) {
+    let {authentication} = getState();
+
+    if (!authentication.isAuthenticated || !authentication.token) {
+        return Promise.reject('Should be authenticated');
+    }
+
+    return doRequest(authentication).then((response) => {
+        if (response && response.status === 401) {
+            return dispatch(handle401());
+        }
+
+        return response;
+    }, (error) => console.log('An error occurred', error));
+}
+
 export function handle401() {
     return (dispatch, getState) => {
         const {authentication} = getState();
