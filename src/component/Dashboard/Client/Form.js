@@ -91,12 +91,9 @@ export default class ClientForm extends React.Component {
                                          {label: 'Trust', value: 'TRUST'}
                                      ]} multiple={true} />
 
-                        <SelectField name="roles" label="Roles"
-                                     helpText="Please select all roles that apply"
-                                     options={[
-                                         {label: 'Administrator', value: 'ADMIN'},
-                                         {label: 'User', value: 'USER'}
-                                     ]} multiple={true} />
+                        <MultiValuedTextField name="roles" label="Roles"
+                                              placeholder="Enter role name"
+                                              helpText="Please select all roles that apply" />
 
                         <MultiValuedTextField name="registeredRedirectUris" label="Registered Redirect URLs"
                                               placeholder="Enter URL to redirect to"
