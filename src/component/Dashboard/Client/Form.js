@@ -98,6 +98,7 @@ export default class ClientForm extends React.Component {
                                      ]} multiple={true} />
 
                         <MultiValuedTextField name="registeredRedirectUris" label="Registered Redirect URLs"
+                                              placeholder="Enter URL to redirect to"
                                               helpText="Please specify allowed redirect URLs"/>
 
                         <button className="btn btn-primary" type="submit">Save</button>

@@ -94,6 +94,7 @@ class AddInputElement extends React.Component {
         return (
             <div className="input-group">
                 <input type="text" className="form-control"
+                       placeholder={this.props.placeholder}
                        ref={this.textInput}
                        value={this.state.value}
                        onBlur={this.props.onBlur}
@@ -115,6 +116,7 @@ class AddInputElement extends React.Component {
 AddInputElement.propTypes = {
     name: PropTypes.string.isRequired,
     addValue: PropTypes.func.isRequired,
+    placeholder: PropTypes.string,
     focused: PropTypes.bool,
     onBlur: PropTypes.func
 };
@@ -164,7 +166,8 @@ export default class MultiValuedTextField extends BaseCustomField {
 
         return (
             <FieldGroup {...baseProperties}>
-                <AddInputElement name="addValue" ref={this.addInputElement} focused={this.state.focusOnAdd}
+                <AddInputElement name="addValue" placeholder={this.props.placeholder}
+                                 ref={this.addInputElement} focused={this.state.focusOnAdd}
                                  addValue={(value) => this.addValue(fieldApi, value)}
                                  onBlur={() => this.setState({focusOnAdd: false})}/>
 
