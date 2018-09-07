@@ -2,6 +2,8 @@ import React from 'react'
 import PropTypes from 'prop-types'
 import {Form} from 'react-form'
 
+import {RECEIVE_UPDATE_CLIENT} from '../../../actions/client/index'
+
 import TextField from '../../Field/TextField'
 import SelectField from '../../Field/SelectField'
 import MultiValuedTextField from '../../Field/MultiValuedTextField'
@@ -19,7 +21,10 @@ export default class ClientForm extends React.Component {
     componentDidUpdate(prev) {
         const {form} = this.props;
         const isDifferentClient = prev.form.current !== form.current;
-        if (isDifferentClient) {
+        const formHasBeenSubmitted = this.formApi.getFormState().submitted;
+        const shouldReset = isDifferentClient || formHasBeenSubmitted;
+
+        if (shouldReset) {
             this.formApi.resetAll();
         }
 
@@ -38,7 +43,11 @@ export default class ClientForm extends React.Component {
     }
 
     onChange(formState) {
-        this.props.onChange(formState.values);
+        const isDirty = Object.keys(formState.touched).length > 0;
+
+        if (!formState.submitting && !formState.submitted && isDirty) {
+            this.props.onChange(formState.values);
+        }
     }
 
     onSubmit(values) {

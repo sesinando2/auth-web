@@ -28,12 +28,12 @@ class Client extends Component {
 
     updateForm(values) {
         const {dispatch} = this.props;
-        dispatch(updateForm(values));
+        return dispatch(updateForm(values));
     }
 
     submitForm(values) {
         const {dispatch} = this.props;
-        dispatch(updateClient(values))
+        return dispatch(updateClient(values));
     }
 
     render() {

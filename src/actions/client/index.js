@@ -10,8 +10,8 @@ export const RECEIVE_CLIENT_LIST = 'RECEIVE_CLIENT_LIST';
 export const REQUEST_GET_CLIENT = 'REQUEST_GET_CLIENT';
 export const RECEIVE_GET_CLIENT = 'RECEIVE_GET_CLIENT';
 
-export const REQUEST_UPDATE_CLIENT = 'REQUEST_CLIENT_UPDATE';
-export const RECEIVE_UPDATE_CLIENT = 'RECEIVE_CLIENT_UPDATE';
+export const REQUEST_UPDATE_CLIENT = 'REQUEST_UPDATE_CLIENT';
+export const RECEIVE_UPDATE_CLIENT = 'RECEIVE_UPDATE_CLIENT';
 
 export const REQUEST_DELETE_CLIENT = 'REQUEST_DELETE_CLIENT';
 export const RECEIVE_DELETE_CLIENT = 'RECEIVE_DELETE_CLIENT';
@@ -53,7 +53,6 @@ export function updateClient(values) {
         const clientId = client.form.current;
 
         return authenticatedRequest(dispatch, getState, (authentication) => {
-            dispatch(requestValidateClient(client, requestedAt));
             dispatch(requestUpdateClient(clientId, values));
             const url = `${CLIENT_URL}/${clientId}`;
 
@@ -122,7 +121,7 @@ function shouldUpdateClient(getState) {
 
     if (client.form.isSaving) {
         return false;
-    } if (client.form.errors) {
+    } if (client.form.errors && Object(client.form.errors).length > 0) {
         return false;
     } if (!client.form.current) {
         return false
