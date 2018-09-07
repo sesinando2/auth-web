@@ -1,16 +1,12 @@
-import {CLIENT_URL} from "./index";
+import {
+    CLEAR_FORM, CLIENT_URL, RECEIVE_VALIDATE_CLIENT, REQUEST_VALIDATE_CLIENT, SET_CLIENT,
+    UPDATE_FORM
+} from "./index";
 import {authenticatedRequest} from "../auth";
 
-export const REQUEST_VALIDATE_CLIENT = 'REQUEST_VALIDATE_CLIENT';
-export const RECEIVE_VALIDATE_CLIENT = 'RECEIVE_VALIDATE_CLIENT';
-
-export const UPDATE_FORM = 'UPDATE_FORM';
-export const EDIT_CLIENT = 'EDIT_CLIENT';
-export const CLEAR_FORM = 'CLEAR_FORM';
-
-export function editClient(id) {
+export function setClient(id) {
     return {
-        type: EDIT_CLIENT,
+        type: SET_CLIENT,
         id
     }
 }
@@ -49,7 +45,7 @@ function validate(values) {
         dispatch(requestValidateClient(values, requestedAt));
         let additionalPaths = [];
 
-        if (client.form.current) {
+        if (client.form.current && client.form.current !== 'new') {
             additionalPaths.push(client.form.current)
         }
 

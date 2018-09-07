@@ -1,10 +1,18 @@
 import {
     CLEAR_FORM,
-    RECEIVE_CLIENT_LIST, REQUEST_CLIENT_LIST, EDIT_CLIENT, UPDATE_FORM, RECEIVE_UPDATE_CLIENT, REQUEST_UPDATE_CLIENT,
-    INVALIDATE_CLIENT_LIST
+    INVALIDATE_CLIENT_LIST,
+    RECEIVE_CLIENT_LIST,
+    RECEIVE_NEW_CLIENT,
+    RECEIVE_UPDATE_CLIENT,
+    RECEIVE_VALIDATE_CLIENT,
+    REQUEST_CLIENT_LIST,
+    REQUEST_NEW_CLIENT,
+    REQUEST_UPDATE_CLIENT,
+    REQUEST_VALIDATE_CLIENT,
+    SET_CLIENT,
+    UPDATE_FORM
 } from '../../actions/client/index'
 import handleForm from './form';
-import {RECEIVE_VALIDATE_CLIENT, REQUEST_VALIDATE_CLIENT} from "../../actions/client/form";
 
 export default function client(state = {
     isRequesting: false,
@@ -38,16 +46,17 @@ export default function client(state = {
                 entities
             });
 
-        case EDIT_CLIENT:
+        case SET_CLIENT:
             action.client = state.entities[action.id];
             return Object.assign({}, state, {
                 form: handleForm(state.form, action)
             });
 
         case RECEIVE_UPDATE_CLIENT:
+        case RECEIVE_NEW_CLIENT:
             return Object.assign({}, state, {
                 entities: Object.assign({}, state.entities, {
-                    [action.clientId]: action.json
+                    [action.json.id]: action.json
                 }),
                form: handleForm(state.form, action)
             });
@@ -58,6 +67,7 @@ export default function client(state = {
         case REQUEST_VALIDATE_CLIENT:
         case RECEIVE_VALIDATE_CLIENT:
         case REQUEST_UPDATE_CLIENT:
+        case REQUEST_NEW_CLIENT:
             return Object.assign({}, state, {
                 form: handleForm(state.form, action)
             });

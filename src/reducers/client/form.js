@@ -1,8 +1,14 @@
 import {
-    CLEAR_FORM, EDIT_CLIENT, RECEIVE_UPDATE_CLIENT, REQUEST_UPDATE_CLIENT,
+    CLEAR_FORM,
+    RECEIVE_NEW_CLIENT,
+    RECEIVE_UPDATE_CLIENT,
+    RECEIVE_VALIDATE_CLIENT,
+    REQUEST_NEW_CLIENT,
+    REQUEST_UPDATE_CLIENT,
+    REQUEST_VALIDATE_CLIENT,
+    SET_CLIENT,
     UPDATE_FORM
 } from '../../actions/client/index';
-import {RECEIVE_VALIDATE_CLIENT, REQUEST_VALIDATE_CLIENT} from "../../actions/client/form";
 
 export default function handleForm(state = {
     isValidating: false,
@@ -28,12 +34,13 @@ export default function handleForm(state = {
 
             return state;
 
-        case EDIT_CLIENT:
+        case SET_CLIENT:
             return Object.assign({}, state, {
                 current: action.id,
                 values: Object.assign({}, action.client),
                 isValidating: false,
-                isValidatingSince: false,
+                isValidatingSince: null,
+                isSaving: false,
                 errors: null
             });
 
@@ -47,19 +54,25 @@ export default function handleForm(state = {
                 current: null,
                 values: null,
                 isValidating: false,
-                isValidatingSince: false,
+                isValidatingSince: null,
                 isSaving: false,
                 errors: null
             });
 
         case REQUEST_UPDATE_CLIENT:
+        case REQUEST_NEW_CLIENT:
             return Object.assign({}, state, {
-                isSaving: true
+                isSaving: true,
+                isValidating: true,
+                isValidatingSince: null,
+                errors: null
             });
 
         case RECEIVE_UPDATE_CLIENT:
+        case RECEIVE_NEW_CLIENT:
             return Object.assign({}, state, {
-                isSaving: false
+                isSaving: false,
+                isValidating: true
             });
 
         default:
