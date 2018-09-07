@@ -1,6 +1,6 @@
 import fetch from 'cross-fetch'
 import {authenticatedRequest} from "../auth";
-import {receiveValidateClient, requestValidateClient} from "./form";
+import {receiveValidateClient} from "./form";
 
 export const INVALIDATE_CLIENT_LIST = 'INVALIDATE_CLIENT_LIST';
 

@@ -2,8 +2,6 @@ import React from 'react'
 import PropTypes from 'prop-types'
 import {Form} from 'react-form'
 
-import {RECEIVE_UPDATE_CLIENT} from '../../../actions/client/index'
-
 import TextField from '../../Field/TextField'
 import SelectField from '../../Field/SelectField'
 import MultiValuedTextField from '../../Field/MultiValuedTextField'
