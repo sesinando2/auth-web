@@ -5,7 +5,7 @@ import {withRouter, Redirect} from 'react-router-dom'
 import {clearForm, setClient, updateForm} from '../actions/client/form';
 
 import ClientForm from '../component/Dashboard/Client/Form'
-import {createClient, RECEIVE_NEW_CLIENT, updateClient} from "../actions/client/index";
+import {createClient, RECEIVE_NEW_CLIENT, updateClient, deleteClient} from "../actions/client/index";
 
 class Client extends React.Component {
 
@@ -17,8 +17,7 @@ class Client extends React.Component {
     }
 
     componentDidMount() {
-        const {dispatch, match} = this.props;
-        dispatch(setClient(match.params.id));
+        this.setClientOrRedirect();
     }
 
     componentWillUnmount() {
@@ -27,10 +26,19 @@ class Client extends React.Component {
     }
 
     componentDidUpdate(prevProps) {
-        const {dispatch, match} = this.props;
+        const {match} = this.props;
         if (prevProps.match.params.id !== match.params.id) {
+            this.setClientOrRedirect();
+        }
+    }
+
+    setClientOrRedirect() {
+        const {dispatch, match, clients} = this.props;
+        if (this.isNew() || clients[match.params.id]) {
             dispatch(setClient(match.params.id));
             this.setState({redirectTo: null})
+        } else {
+            this.setState({redirectTo: '/dashboard/client'});
         }
     }
 
@@ -40,17 +48,35 @@ class Client extends React.Component {
     }
 
     submitForm(values) {
-        const {dispatch, match} = this.props;
-        if (match.params.id === 'new') {
-            return dispatch(createClient(values)).then((response) => {
-                console.log(response);
-                if (response && response.type === RECEIVE_NEW_CLIENT) {
-                    this.setState({redirectTo: `/dashboard/client/${response.json.id}`});
-                }
-            });
+        const {dispatch} = this.props;
+        if (this.isNew()) {
+            return this.createNewClient(values);
         } else {
             return dispatch(updateClient(values));
         }
+    }
+
+    createNewClient(values) {
+        const {dispatch} = this.props;
+
+        return dispatch(createClient(values)).then((response) => {
+            if (response && response.type === RECEIVE_NEW_CLIENT) {
+                this.setState({redirectTo: `/dashboard/client/${response.json.id}`});
+            }
+        });
+    }
+
+    deleteExistingClient(clientId) {
+        const {dispatch} = this.props;
+
+        return dispatch(deleteClient(clientId)).then(() => {
+            this.setState({redirectTo: '/dashboard/client'});
+        });
+    }
+
+    isNew() {
+        const {match} = this.props;
+        return match.params.id === 'new';
     }
 
     shouldRedirect() {
@@ -63,11 +89,15 @@ class Client extends React.Component {
         if (this.shouldRedirect()) {
             return <Redirect to={this.state.redirectTo} />
         } else {
-            return <ClientForm form={this.props.form} onChange={(value) => this.updateForm(value)} onSubmit={(value) => this.submitForm(value)} />
+            return <ClientForm form={this.props.form}
+                               onChange={(values) => this.updateForm(values)}
+                               onSubmit={(values) => this.submitForm(values)}
+                               onDelete={(clientId) => this.deleteExistingClient(clientId)}
+                               isNew={this.isNew()} />
         }
     }
 }
 
-const mapStateToProps = (state) => ({form: state.client.form});
+const mapStateToProps = (state) => ({form: state.client.form, clients: state.client.entities});
 
 export default withRouter(connect(mapStateToProps)(Client));

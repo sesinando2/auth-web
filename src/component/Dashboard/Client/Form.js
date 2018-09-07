@@ -52,6 +52,11 @@ export default class ClientForm extends React.Component {
         this.props.onSubmit(values);
     }
 
+    onDelete() {
+        const {onDelete, form} = this.props;
+        return onDelete && onDelete(form.current);
+    }
+
     validateRequired(errorMessage, value) {
         if (value === null || value === undefined || value === '' || value.length === 0) {
             return {error: errorMessage}
@@ -64,9 +69,8 @@ export default class ClientForm extends React.Component {
         const validateClientId = (value) => this.validateRequired('Please enter a valid Client ID.', value);
         const validateClientSecret = (value) => this.validateRequired('Please enter a valid Client Secret.', value);
         const dirty = Object.keys(formApi.getFormState().touched).length > 0;
-        const formState = formApi.getFormState();
-        const isSubmitting = formState.submitting && formState.submitted;
-        const disableSubmit = !dirty || formApi.errors || isSubmitting;
+        const isProcessing = this.props.form.isProcessing;
+        const disableSubmit = !dirty || formApi.errors || isProcessing;
 
         return (
             <form onSubmit={formApi.submitForm}>
@@ -113,6 +117,9 @@ export default class ClientForm extends React.Component {
                                       placeholder="Enter URL to redirect to"
                                       helpText="Please specify allowed redirect URLs" />
 
+                {!this.props.isNew && <button className="btn btn-danger" type="button" disabled={isProcessing}
+                                              onClick={() => this.onDelete()}>Delete</button>}
+
                 <button className="btn btn-primary fa-pull-right" type="submit" disabled={disableSubmit}>Save</button>
             </form>
         )
@@ -126,6 +133,8 @@ export default class ClientForm extends React.Component {
 ClientForm.propTypes = {
     form: PropTypes.object.isRequired,
     onChange: PropTypes.func.isRequired,
-    onSubmit: PropTypes.func.isRequired
+    onSubmit: PropTypes.func.isRequired,
+    onDelete: PropTypes.func,
+    isNew: PropTypes.bool
 };
 

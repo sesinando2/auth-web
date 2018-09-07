@@ -108,6 +108,23 @@ export function createClient(values) {
     }
 }
 
+export function deleteClient(clientId) {
+    return (dispatch, getState) => {
+        return authenticatedRequest(dispatch, getState, (authentication) => {
+            dispatch(requestDeleteClient(clientId));
+
+            return fetch(`${CLIENT_URL}/${clientId}`, {
+               method: 'DELETE',
+               headers: {
+                   'Authorization': `Bearer ${authentication.token}`,
+                   'Content-Type': 'application/json'
+               }
+            })
+            .then(() => dispatch(receiveDeleteClient(clientId)));
+        });
+    }
+}
+
 function requestClientList() {
     return {
         type: REQUEST_CLIENT_LIST,
@@ -150,6 +167,20 @@ function receiveNewClient(json) {
     }
 }
 
+function requestDeleteClient(clientId) {
+    return {
+        type: REQUEST_DELETE_CLIENT,
+        clientId
+    }
+}
+
+function receiveDeleteClient(clientId) {
+    return {
+        type: RECEIVE_DELETE_CLIENT,
+        clientId
+    }
+}
+
 function shouldGetClientList(getState) {
     const {client} = getState();
 
@@ -165,7 +196,7 @@ function shouldGetClientList(getState) {
 function shouldUpdateClient(getState) {
     const {client} = getState();
 
-    if (client.form.isSaving) {
+    if (client.form.isProcessing) {
         return false;
     } if (client.form.errors && Object(client.form.errors).length > 0) {
         return false;

@@ -1,7 +1,7 @@
 import {
     CLEAR_FORM,
     INVALIDATE_CLIENT_LIST,
-    RECEIVE_CLIENT_LIST,
+    RECEIVE_CLIENT_LIST, RECEIVE_DELETE_CLIENT,
     RECEIVE_NEW_CLIENT,
     RECEIVE_UPDATE_CLIENT,
     RECEIVE_VALIDATE_CLIENT,
@@ -21,7 +21,7 @@ export default function client(state = {
     form: {
         isValidating: false,
         isValidatingSince: null,
-        isSaving: false
+        isProcessing: false
     }
 }, action) {
     switch (action.type) {
@@ -36,20 +36,21 @@ export default function client(state = {
             });
 
         case RECEIVE_CLIENT_LIST:
-            let entities = createEntities(action.json);
+            let clientList = createEntities(action.json);
             return Object.assign({}, state, {
                 isRequesting: false,
                 lastUpdated: action.receivedAt,
                 form: Object.assign({}, state.form, {
-                    values: Object.assign({}, entities[state.form.current])
+                    values: Object.assign({}, clientList[state.form.current])
                 }),
-                entities
+                entities: clientList
             });
 
         case SET_CLIENT:
-            action.client = state.entities[action.id];
             return Object.assign({}, state, {
-                form: handleForm(state.form, action)
+                form: Object.assign({}, handleForm(state.form, action), {
+                    values: Object.assign({}, state.entities[action.id])
+                })
             });
 
         case RECEIVE_UPDATE_CLIENT:
@@ -59,6 +60,18 @@ export default function client(state = {
                     [action.json.id]: action.json
                 }),
                form: handleForm(state.form, action)
+            });
+
+        case RECEIVE_DELETE_CLIENT:
+            return Object.assign({}, state, {
+                entities: Object.keys(state.entities).reduce((entities, clientId) => {
+                    if (clientId !== action.clientId) {
+                        entities[clientId] = state.entities[clientId];
+                    }
+
+                    return entities;
+                }, {}),
+                form: handleForm(state.form, action)
             });
 
         // Form Operations
