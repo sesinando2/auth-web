@@ -1,5 +1,8 @@
 import fetch from 'cross-fetch'
 import {authenticatedRequest} from "../auth";
+import {receiveValidateClient, requestValidateClient} from "./form";
+
+export const INVALIDATE_CLIENT_LIST = 'INVALIDATE_CLIENT_LIST';
 
 export const REQUEST_CLIENT_LIST = 'REQUEST_CLIENT_LIST';
 export const RECEIVE_CLIENT_LIST = 'RECEIVE_CLIENT_LIST';
@@ -39,6 +42,41 @@ export function getClientList() {
     }
 }
 
+export function updateClient(values) {
+    const requestedAt = new Date();
+    return (dispatch, getState) => {
+        if (!shouldUpdateClient(getState)) {
+            return Promise.resolve();
+        }
+
+        const {client} = getState();
+        const clientId = client.form.current;
+
+        return authenticatedRequest(dispatch, getState, (authentication) => {
+            dispatch(requestValidateClient(client, requestedAt));
+            dispatch(requestUpdateClient(clientId, values));
+            const url = `${CLIENT_URL}/${clientId}`;
+
+            return fetch(url, {
+                method: 'PUT',
+                headers: {
+                    'Authorization': `Bearer ${authentication.token}`,
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(values)
+            })
+        })
+        .then((response) => {
+            if (response.status === 400) {
+                return response.json().then((json) => dispatch(receiveValidateClient(json, requestedAt)));
+            }
+
+            return response.json();
+        })
+        .then((json) => dispatch(receiveUpdateClient(clientId, json)));
+    }
+}
+
 function requestClientList() {
     return {
         type: REQUEST_CLIENT_LIST,
@@ -50,6 +88,20 @@ function receiveClientList(json) {
         type: RECEIVE_CLIENT_LIST,
         receivedAt: Date.now(),
         json
+    }
+}
+
+function requestUpdateClient(clientId, values) {
+    return {
+        type: REQUEST_UPDATE_CLIENT,
+        clientId, values
+    }
+}
+
+function receiveUpdateClient(clientId, json) {
+    return {
+        type: RECEIVE_UPDATE_CLIENT,
+        clientId, json
     }
 }
 
@@ -65,3 +117,16 @@ function shouldGetClientList(getState) {
     }
 }
 
+function shouldUpdateClient(getState) {
+    const {client} = getState();
+
+    if (client.form.isSaving) {
+        return false;
+    } if (client.form.errors) {
+        return false;
+    } if (!client.form.current) {
+        return false
+    } else {
+        return true;
+    }
+}

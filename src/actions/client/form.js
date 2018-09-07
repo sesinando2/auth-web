@@ -28,14 +28,14 @@ export function clearForm() {
     }
 }
 
-function requestValidateClient(client, requestedAt) {
+export function requestValidateClient(client, requestedAt) {
     return {
         type: REQUEST_VALIDATE_CLIENT,
         requestedAt, client
     }
 }
 
-function receiveValidateClient(json, requestedAt) {
+export function receiveValidateClient(json, requestedAt) {
     return {
         type: RECEIVE_VALIDATE_CLIENT,
         requestedAt, json
@@ -68,7 +68,7 @@ function validate(values) {
         if (response.status === 400) {
             return response.json().then((json) => dispatch(receiveValidateClient(json, requestedAt)));
         } else {
-            return dispatch(receiveValidateClient(null, requestedAt))
+            return dispatch(receiveValidateClient(null, requestedAt));
         }
 
     });

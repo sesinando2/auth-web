@@ -5,6 +5,7 @@ import {withRouter} from 'react-router-dom'
 import {clearForm, editClient, updateForm} from '../actions/client/form';
 
 import ClientForm from '../component/Dashboard/Client/Form'
+import {updateClient} from "../actions/client/index";
 
 class Client extends Component {
 
@@ -30,10 +31,16 @@ class Client extends Component {
         dispatch(updateForm(values));
     }
 
+    submitForm(values) {
+        const {dispatch} = this.props;
+        dispatch(updateClient(values))
+    }
+
     render() {
         const {form} = this.props;
-        const updateForm = this.updateForm.bind(this);
-        return <ClientForm form={form} onChange={updateForm} />
+        return <ClientForm form={form}
+                           onChange={(value) => this.updateForm(value)}
+                           onSubmit={(value) => this.submitForm(value)} />
     }
 }
 

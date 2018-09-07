@@ -1,7 +1,14 @@
-import {CLEAR_FORM, EDIT_CLIENT, UPDATE_FORM} from '../../actions/client/index';
+import {
+    CLEAR_FORM, EDIT_CLIENT, RECEIVE_UPDATE_CLIENT, REQUEST_UPDATE_CLIENT,
+    UPDATE_FORM
+} from '../../actions/client/index';
 import {RECEIVE_VALIDATE_CLIENT, REQUEST_VALIDATE_CLIENT} from "../../actions/client/form";
 
-export default function handleForm(state, action) {
+export default function handleForm(state = {
+    isValidating: false,
+    isValidatingSince: null,
+    isSaving: false
+}, action) {
     switch (action.type) {
         case REQUEST_VALIDATE_CLIENT:
             return Object.assign({}, state, {
@@ -41,7 +48,18 @@ export default function handleForm(state, action) {
                 values: null,
                 isValidating: false,
                 isValidatingSince: false,
+                isSaving: false,
                 errors: null
+            });
+
+        case REQUEST_UPDATE_CLIENT:
+            return Object.assign({}, state, {
+                isSaving: true
+            });
+
+        case RECEIVE_UPDATE_CLIENT:
+            return Object.assign({}, state, {
+                isSaving: false
             });
 
         default:

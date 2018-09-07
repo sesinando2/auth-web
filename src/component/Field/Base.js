@@ -43,6 +43,7 @@ export class BaseField extends React.Component {
         const {formApi} = this.props;
         const baseProperties = this.getFieldProperties(formApi);
         const fieldBody = this.renderFieldBody(baseProperties);
+        console.log(formApi.getFormState());
         return (
             <FieldGroup {...baseProperties}>{fieldBody}</FieldGroup>
         )

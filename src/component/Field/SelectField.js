@@ -50,6 +50,7 @@ export default class SelectField extends BaseCustomField {
 
         if (!multiple) {
             setValue(newValue);
+            fieldApi.setTouched();
         } else {
             this.toggleMulti(fieldApi, newValue);
         }
@@ -61,8 +62,10 @@ export default class SelectField extends BaseCustomField {
 
         if (this.isSelectedValue(fieldApi, toggleValue)) {
             setValue(values.filter((value) => value !== toggleValue));
+            fieldApi.setTouched();
         } else {
             setValue(values.concat(toggleValue));
+            fieldApi.setTouched();
         }
     }
 

@@ -12,6 +12,8 @@ export default class ClientForm extends React.Component {
         super(props);
         this.setApi = this.setApi.bind(this);
         this.onChange = this.onChange.bind(this);
+        this.onSubmit = this.onSubmit.bind(this);
+        this.renderForm = this.renderForm.bind(this);
     }
 
     componentDidUpdate(prev) {
@@ -39,8 +41,11 @@ export default class ClientForm extends React.Component {
         this.props.onChange(formState.values);
     }
 
+    onSubmit(values) {
+        this.props.onSubmit(values);
+    }
+
     validateRequired(errorMessage, value) {
-        console.log(value);
         if (value === null || value === undefined || value === '' || value.length === 0) {
             return {error: errorMessage}
         }
@@ -51,6 +56,7 @@ export default class ClientForm extends React.Component {
     renderForm(formApi) {
         const validateClientId = (value) => this.validateRequired('Please enter a valid Client ID.', value);
         const validateClientSecret = (value) => this.validateRequired('Please enter a valid Client Secret.', value);
+        const dirty = Object.keys(formApi.getFormState().touched).length > 0;
 
         return (
             <form onSubmit={formApi.submitForm}>
@@ -97,18 +103,19 @@ export default class ClientForm extends React.Component {
                                       placeholder="Enter URL to redirect to"
                                       helpText="Please specify allowed redirect URLs" />
 
-                <button className="btn btn-primary fa-pull-right" type="submit">Save</button>
+                <button className="btn btn-primary fa-pull-right" type="submit" disabled={!dirty || formApi.errors}>Save</button>
             </form>
         )
     }
 
     render() {
-        return <Form getApi={this.setApi} onChange={this.onChange}>{this.renderForm}</Form>
+        return <Form getApi={this.setApi} onChange={this.onChange} onSubmit={this.onSubmit}>{this.renderForm}</Form>
     }
 }
 
 ClientForm.propTypes = {
     form: PropTypes.object.isRequired,
-    onChange: PropTypes.func.isRequired
+    onChange: PropTypes.func.isRequired,
+    onSubmit: PropTypes.func.isRequired
 };
 

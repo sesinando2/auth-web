@@ -143,6 +143,7 @@ export default class MultiValuedTextField extends BaseCustomField {
         const currentValue = fieldApi.value || [];
         const updatedValue = currentValue.filter((value) => value !== valueToRemove);
         fieldApi.setValue(updatedValue);
+        fieldApi.setTouched();
 
         if (updatedValue.length === 0) {
             this.setState({focusOnAdd: true, focusOnFirst: false});
@@ -156,6 +157,7 @@ export default class MultiValuedTextField extends BaseCustomField {
         const currentValue = fieldApi.value || [];
         if (currentValue.indexOf(valueToAdd) < 0) {
             fieldApi.setValue(currentValue.concat(valueToAdd));
+            fieldApi.setTouched();
         }
     }
 
