@@ -66,6 +66,9 @@ export default class ClientForm extends React.Component {
         const validateClientId = (value) => this.validateRequired('Please enter a valid Client ID.', value);
         const validateClientSecret = (value) => this.validateRequired('Please enter a valid Client Secret.', value);
         const dirty = Object.keys(formApi.getFormState().touched).length > 0;
+        const formState = formApi.getFormState();
+        const isSubmitting = formState.submitting && formState.submitted;
+        const disableSubmit = !dirty || formApi.errors || isSubmitting;
 
         return (
             <form onSubmit={formApi.submitForm}>
@@ -112,7 +115,7 @@ export default class ClientForm extends React.Component {
                                       placeholder="Enter URL to redirect to"
                                       helpText="Please specify allowed redirect URLs" />
 
-                <button className="btn btn-primary fa-pull-right" type="submit" disabled={!dirty || formApi.errors}>Save</button>
+                <button className="btn btn-primary fa-pull-right" type="submit" disabled={disableSubmit}>Save</button>
             </form>
         )
     }
